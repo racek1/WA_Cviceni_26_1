@@ -9,9 +9,13 @@
 <body>
     <canvas id="canvas" width="500" height="500"></canvas>
     <br>
-    <input type="color" id="colorPicker">
-    <input type="range" id="brushSizePicker" min="1" max="5" value="1">
-    <input type="button" id="clearButton" value="Clear">
+    <div id="menu">
+        <input type="color" id="colorPicker">
+        <input type="range" id="brushSizePicker" min="1" max="5" value="1">
+        <input type="button" id="clearButton" value="Clear">
+        <input type="button" id="saveButton" value="Save">
+        <input type="button" id="loadButton" value="Load">
+    </div>
 
 </body>
 <style>
@@ -19,6 +23,8 @@
     {
         border-style: solid;
         border-width: 1px;
+        display: block;
+        margin: 0 auto;
     }
     input
     {
@@ -30,6 +36,12 @@
         width: 50px;
         height: 50px;
     }
+    #menu
+    {
+        display: block;
+        margin: 0 auto;
+        width: 500px;
+    }
 </style>
 <script>
     let canvas = document.getElementById("canvas");
@@ -37,9 +49,13 @@
     let colorPicker = document.getElementById("colorPicker");
     let brushSizePicker = document.getElementById('brushSizePicker');
     let clearButton = document.getElementById('clearButton');
+    let saveButton = document.getElementById('saveButton');
+    let loadButton = document.getElementById('loadButton');
     let isDrawing = false;
     let mouseX = 0;
     let mouseY = 0;
+    let imageData;
+
     ctx.lineWidth = 5;
     ctx.lineCap = 'round';
     pickColor('#000000');
@@ -50,7 +66,9 @@
     colorPicker.addEventListener('input',pickColor);
     brushSizePicker.addEventListener('input',pickBrushSize);
     clearButton.addEventListener('click',clear);
- 
+    saveButton.addEventListener('click',save);
+    loadButton.addEventListener('click',load);
+
     function draw(e)
     {
         if (isDrawing)
@@ -76,6 +94,20 @@
     function clear() 
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function load()
+    {
+        var img = new Image();
+        img.src = imageData;
+        ctx.drawImage(img,0,0);
+    }
+
+
+    function save()
+    {
+        imageData = canvas.toDataURL();
+        localStorage.setItem('imageData',imageData);
     }
 
 </script>
