@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <br>
+    <input type="color" id="colorPicker">
+    <input type="range" id="brushSizePicker" min="1" max="5" value="1">
+    <input type="button" id="clearButton" value="Clear">
+
+</body>
+<style>
+    canvas
+    {
+        border-style: solid;
+        border-width: 1px;
+    }
+    input
+    {
+        width: 50px;
+        height: 50px;
+    }
+    #colorPicker
+    {
+        width: 50px;
+        height: 50px;
+    }
+</style>
+<script>
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    let colorPicker = document.getElementById("colorPicker");
+    let brushSizePicker = document.getElementById('brushSizePicker');
+    let clearButton = document.getElementById('clearButton');
+    let isDrawing = false;
+    let mouseX = 0;
+    let mouseY = 0;
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    pickColor('#000000');
+
+    canvas.addEventListener('mousedown', (e) => {isDrawing = true; mouseX = e.offsetX; mouseY = e.offsetY; console.log(mouseX + " " + mouseY)});
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    colorPicker.addEventListener('input',pickColor);
+    brushSizePicker.addEventListener('input',pickBrushSize);
+    clearButton.addEventListener('click',clear);
+ 
+    function draw(e)
+    {
+        if (isDrawing)
+        {
+            ctx.beginPath();
+            ctx.moveTo(mouseX,mouseY);
+            ctx.lineTo(e.offsetX,e.offsetY);
+            ctx.stroke();
+            mouseX = e.offsetX; mouseY = e.offsetY;
+        }
+    }
+
+    function pickColor() 
+    {
+        ctx.strokeStyle = colorPicker.value;
+    }
+
+    function pickBrushSize() 
+    {
+        ctx.lineWidth = brushSizePicker.value * 5;
+    }
+
+    function clear() 
+    {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+</script>
+</html>
